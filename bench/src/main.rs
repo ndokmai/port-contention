@@ -21,21 +21,85 @@ macro_rules! do_test {
 }
 
 macro_rules! all_tests {
-    ($name:expr, $op:tt, $rounds:expr, $s:ident, $test_results:ident) => (
-        do_test!(format!("integer {}", $name), 1f64, 0f64, $rounds, $op, $s, $test_results);
-        do_test!(format!("subnorm {}", $name), 1e-310f64, 0.1f64, $rounds, $op, $s, $test_results);
-        do_test!(format!("subnorm {}", $name), 7f64, 1e-310f64, $rounds, $op, $s, $test_results);
-        do_test!(format!("small {}", $name), 0.1f64, 0.1, $rounds, $op, $s, $test_results);
-    )
+    ($name:expr, $op:tt, $rounds:expr, $s:ident, $test_results:ident) => {
+        do_test!(
+            format!("integer {}", $name),
+            1f64,
+            0f64,
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+        do_test!(
+            format!("subnorm {}", $name),
+            1e-310f64,
+            0.1f64,
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+        do_test!(
+            format!("subnorm {}", $name),
+            7f64,
+            1e-310f64,
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+        do_test!(
+            format!("small {}", $name),
+            0.1f64,
+            0.1,
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+    };
 }
 
 macro_rules! all_ftfp_tests {
-    ($name:expr, $op:tt, $rounds:expr, $s:ident, $test_results:ident) => (
-        do_test!(format!("ftfp-integer {}", $name), Fixed::from(1f64), Fixed::from(0f64), $rounds, $op, $s, $test_results);
-        do_test!(format!("ftfp-subnorm {}", $name), Fixed::from(1e-310f64), Fixed::from(0.1f64), $rounds, $op, $s, $test_results);
-        do_test!(format!("ftfp-subnorm {}", $name), Fixed::from(7f64), Fixed::from(1e-310f64), $rounds, $op, $s, $test_results);
-        do_test!(format!("ftfp-small {}", $name), Fixed::from(0.1f64), Fixed::from(0.1), $rounds, $op, $s, $test_results);
-    )
+    ($name:expr, $op:tt, $rounds:expr, $s:ident, $test_results:ident) => {
+        do_test!(
+            format!("ftfp-integer {}", $name),
+            Fixed::from(1f64),
+            Fixed::from(0f64),
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+        do_test!(
+            format!("ftfp-subnorm {}", $name),
+            Fixed::from(1e-310f64),
+            Fixed::from(0.1f64),
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+        do_test!(
+            format!("ftfp-subnorm {}", $name),
+            Fixed::from(7f64),
+            Fixed::from(1e-310f64),
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+        do_test!(
+            format!("ftfp-small {}", $name),
+            Fixed::from(0.1f64),
+            Fixed::from(0.1),
+            $rounds,
+            $op,
+            $s,
+            $test_results
+        );
+    };
 }
 
 #[allow(unused_assignments)]
@@ -78,5 +142,4 @@ fn main() {
 
         all_ftfp_tests!("/", /, rounds, s, test_results);
     }
-
 }

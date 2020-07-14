@@ -1,13 +1,13 @@
-use std::env;
 use core::arch::x86_64::_rdtsc;
+use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    assert!(args.len()==2);
+    assert!(args.len() == 2);
     let secret = match args[1].as_str() {
         "true" => true,
         "false" => false,
-        _ => panic!("Invalid secret value")
+        _ => panic!("Invalid secret value"),
     };
 
     let rounds = 1_000;
@@ -24,11 +24,7 @@ fn main() {
                     let one = ones[i];
                     let a = norm[i];
                     let b = subnorm[i];
-                    let c = if secret {
-                        one*a
-                    } else {
-                        one*b
-                    };
+                    let c = if secret { one / a } else { one / b };
                     test_results[i] = c;
                 }
                 println!("{}", _rdtsc() - now);
@@ -40,11 +36,7 @@ fn main() {
                 let one = ones[i];
                 let a = norm[i];
                 let b = subnorm[i];
-                let c = if secret {
-                    one*a
-                } else {
-                    one*b
-                };
+                let c = if secret { one / a } else { one / b };
                 test_results[i] = c;
             }
         }
