@@ -9,14 +9,12 @@ Observe the clock cycles discrepancy between 'integer' and 'small' on the one ha
 ## Side-channel measurement
 Run the script,
 ```bash
-./run_experiment.sh <output_dir> <num_data_points> <num_rounds_per_data_point>
+./run_experiment.sh <output_dir> <num_data_points>
 ```
 For example,
 ```bash
-./run_experiment.sh data 10000 10000
+./run_experiment.sh data 100
 ```
-Per each data point, the monitor code will measure the accumulative clock cycles of `num_rounds_per_data_point` subnormal floating-point multiplications.
-
 After the script finishes, 3 text files will be generated: `baseline.txt`, `normal.txt`, and `subnormal.txt`.
 
 ## Plotting
