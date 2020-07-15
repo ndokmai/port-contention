@@ -13,12 +13,12 @@ Run the script,
 ```
 For example,
 ```bash
-./run_experiment.sh data 100
+./run_experiment.sh data 200000 
 ```
-After the script finishes, 3 text files will be generated: `baseline.txt`, `normal.txt`, and `subnormal.txt`.
+After the script finishes, `side-channel.txt` will be generated.
 
 ## Plotting
 In [`plot/`](plot), run
 ```bash
-python plot.py /path/to/baseline.txt /path/to/normal.txt /path/to/subnormal.txt
+python plot.py /path/to/side-channel.txt
 ```
