@@ -1,72 +1,10 @@
 #![feature(asm)]
-//#![allow(unused_assignments)]
 use std::env;
 
-#[inline]
-fn measure() -> u64 {
-    let mut result: u64;
-    let norm: f64 = 7.;
-    //let subnorm: f64 = 1e-310;
-    let subnorm: f64 = 1.;
-    let output: f64 = 0.;
-    unsafe {
-        asm!("
-        fld qword ptr [r10] 
-        fld qword ptr [r9] 
-        rdtscp
-        shl rdx, 0x20
-        or rax, rdx
-        mov r11, rax
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        fdiv st(0), st(1)
-        rdtscp
-        shl rdx, 0x20
-        or rax, rdx
-        sub rax, r11
-        mov {0}, rax
-        fst qword ptr [r8]
-        ", out(reg) result, in("r8") &output, in("r9") &norm, in("r10") &subnorm);
-    }
-    result
-}
+const A: f64 = 1.; 
+//const A: f64 = f64::NAN;
+const B: f64 = 1.;
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -74,18 +12,59 @@ fn main() {
     let n = args[1].parse::<usize>().unwrap(); // # of data points generated
     let mut results = vec![0; n];
 
-    // warmup
-    eprintln!("Warming up...");
-    for _ in 0..n {
-        measure();
-    }
 
     eprintln!("Measuring...");
     for r in results.iter_mut() {
-        *r = measure();
+        *r = measure(); 
     }
-
+    eprintln!("monitor done");
     for r in results {
         println!("{}", r);
     }
+}
+
+#[inline]
+fn measure() -> u64 {
+    let mut result: u64;
+    unsafe {
+        asm!("
+        fld qword ptr [{ptr_b}] 
+        fld qword ptr [{ptr_a}] 
+        rdtscp
+        shl rdx, 32 
+        or rax, rdx
+        mov r8, rax
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        rdtscp
+        shl rdx, 32 
+        or rax, rdx
+        sub rax, r8
+        fstp st
+        fstp st
+        ", 
+        ptr_a = in(reg) &A, 
+        ptr_b = in(reg) &B, 
+        out("rax") result)
+    }
+    result
 }
