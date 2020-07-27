@@ -8,4 +8,5 @@ edition = "2018"
 
 [dependencies]
 rand = "0.7"
-
+nix = "0.17"
+libc = "0.2"

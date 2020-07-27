@@ -1,5 +1,8 @@
 #![feature(asm)]
 use std::env;
+use std::io::Write;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 
 const A: f64 = 1.; 
 //const A: f64 = f64::NAN;
@@ -9,18 +12,26 @@ const B: f64 = 1.;
 fn main() {
     let args: Vec<String> = env::args().collect();
     assert!(args.len() == 2);
-    let n = args[1].parse::<usize>().unwrap(); // # of data points generated
-    let mut results = vec![0; n];
+    let result_filename = &args[1];
+    let mut result_file = std::fs::File::create(result_filename).unwrap();
+    let mut results = Vec::with_capacity(1000000);
 
+    let running = Arc::new(AtomicBool::new(true));
+    let r = running.clone();
 
-    eprintln!("Measuring...");
-    for r in results.iter_mut() {
-        *r = measure(); 
+    ctrlc::set_handler(move || {
+        r.store(false, Ordering::SeqCst);
+    }).expect("Error setting Ctrl-C handler");
+
+    eprintln!("monitor: measuring...");
+    while running.load(Ordering::SeqCst) {
+        results.push(measure()); 
     }
-    eprintln!("monitor done");
+    eprintln!("monitor: writing results...");
     for r in results {
-        println!("{}", r);
+        writeln!(result_file, "{}", r).unwrap();
     }
+    eprintln!("monitor: done!");
 }
 
 #[inline]
@@ -30,6 +41,7 @@ fn measure() -> u64 {
         asm!("
         fld qword ptr [{ptr_b}] 
         fld qword ptr [{ptr_a}] 
+        lfence
         rdtscp
         shl rdx, 32 
         or rax, rdx
@@ -55,6 +67,198 @@ fn measure() -> u64 {
         fdivp st, st(1)
         fdivp st, st(1)
         fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        fdivp st, st(1)
+        lfence
         rdtscp
         shl rdx, 32 
         or rax, rdx
