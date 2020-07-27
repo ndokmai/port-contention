@@ -7,7 +7,9 @@ def get_list_from_file(filename):
     x = np.fromiter(map(lambda x: float(x.strip()),  f.readlines()), float)
     return x
 
-def segmentation(side_channel, n_search_windows=10000):
+def segmentation(side_channel, window_size=100):
+    n_search_windows = int(len(side_channel)/window_size)
+
     # GMM
     part = mixture.GaussianMixture(
         n_components=2,
@@ -19,7 +21,6 @@ def segmentation(side_channel, n_search_windows=10000):
     ranges = sorted(ranges , key=lambda x: x[1]-x[0])
 
     # segmentation
-    window_size = int(len(side_channel)/n_search_windows)
     segment_lines = []
     prev_segment = None
     for i in range(n_search_windows):
