@@ -39,7 +39,6 @@ def segmentation(side_channel, window_size=100):
                 segment_lines += [ i*window_size ]
                 prev_segment = 1
 
-    print(segment_lines)
     # choose segmentation
     segment_lens = []
     for (a, b) in zip(segment_lines[:-1], segment_lines[1:]):
@@ -61,7 +60,6 @@ def segmentation(side_channel, window_size=100):
     segment_groups = [x for x in segment_groups if len(x) > 1]
     chosen_group = max(segment_groups, key=lambda x: statistics.mean(x))
     chosen_group = set(chosen_group)
-    print(chosen_group)
 
     # filter segmentation
     segments = []

@@ -17,28 +17,30 @@ for (a, b) in segments:
     means += [statistics.mean(segment)]
 means = np.array(means)
 
-def cluster(signal, reference):
+def cluster(signal, ref):
     part = mixture.BayesianGaussianMixture(n_components=2, max_iter=300)
     part.fit(signal.reshape(-1, 1))
     target = sorted(part.means_)
     answers = []
-    for i in means:
+    for i in signal:
         if abs(i-target[0]) < abs(i-target[1]):
             answers += [0]
         else:
             answers += [1]
-    print(part.means_)
-    print("reference =\t", reference)
-    print("answer =\t", answers)
+    print("zero center = \t", part.means_[0])
+    print("one center = \t", part.means_[1])
+    print("reference =\t", ref)
+    print("answer =\t", np.array(answers))
     correctness = 0
-    for (a, b) in zip(answers, reference):
+    for (a, b) in zip(answers, ref):
         if a == b:
             correctness += 1
     print("correctness =", correctness/len(answers)*100)
 
-cluster(means, reference)
-# for signal, reference in zip(np.array_split(means, 10), np.array_split(np.array(reference), 10)):
-    # cluster(signal, reference)
+n_chunks = int((len(reference) + 19)/20)
+# cluster(means, reference)
+for signal, reference in zip(np.array_split(means, n_chunks), np.array_split(np.array(reference), n_chunks)):
+    cluster(signal, reference)
 
 
 

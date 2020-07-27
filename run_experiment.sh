@@ -19,6 +19,7 @@ cargo build
 
 echo "### Starting monitor process"
 taskset --cpu-list $CPU1 cargo run -q --bin monitor -- $DATA_DIR/side-channel.txt &
+sleep 0.1s
 
 echo "### Starting victim process"
 taskset --cpu-list $CPU2 cargo run -q --bin victim | tee $DATA_DIR/secret.txt

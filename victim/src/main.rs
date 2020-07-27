@@ -37,7 +37,7 @@ fn main() {
 
     use rand::RngCore;
     let mut rng = rand::thread_rng();
-    let mut secrets = [0u8; 10];
+    let mut secrets = [0u8; 30];
     rng.fill_bytes(&mut secrets[..]);
     let secrets = secrets.iter().map(|v| *v & 1).collect::<Vec<u8>>();
 

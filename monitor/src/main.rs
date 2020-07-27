@@ -14,7 +14,7 @@ fn main() {
     assert!(args.len() == 2);
     let result_filename = &args[1];
     let mut result_file = std::fs::File::create(result_filename).unwrap();
-    let mut results = Vec::with_capacity(1000000);
+    let mut results = Vec::with_capacity(10000000);
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
